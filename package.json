@@ -1,0 +1,23 @@
+{
+  "name": "react-prototype",
+  "version": "0.0.1",
+  "description": "React prototype for Lasp.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lasp-lang/react-prototype.git"
+  },
+  "author": "",
+  "license": "APSL-2.0",
+  "bugs": {
+    "url": "https://github.com/lasp-lang/react-prototype/issues"
+  },
+  "homepage": "https://github.com/lasp-lang/react-prototype#readme",
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "webpack": "^1.13.2"
+  }
+}
