@@ -13,6 +13,7 @@ function guid() {
     s4() + '-' + s4() + s4() + s4();
 }
 
+// Traditional add-wins observed-remove set.
 class ORSet {
   constructor() {
     this.payload = Map();
@@ -20,15 +21,52 @@ class ORSet {
 
   add(element) {
     var elementPayload = this.payload.get(element, List());
-    var modifiedElementPayload = elementPayload.push({id: guid(), deleted: false});
+    var modifiedElementPayload = elementPayload.push({id: guid(), value: element, deleted: false});
     this.payload = this.payload.set(element, modifiedElementPayload);
     return this;
+  }
+
+  remove(element) {
+    var elementPayload = this.payload.get(element, List());
+    var modifiedElementPayload = elementPayload.reduce(
+        function(payload, item) {
+          item["deleted"] = true;
+          return payload.push(item);
+        },
+        List());
+    this.payload = this.payload.set(element, modifiedElementPayload);
+    return this;
+  }
+
+  merge(orset) {
+  }
+
+  query() {
+    return this.payload.reduce(
+        function(elements, element, key) {
+          var present = element.some(function(value) {
+            if(value.deleted === false) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+
+          if(present === true) {
+            return elements.push(key);
+          } else {
+            return elements;
+          }
+        },
+        List())
   }
 }
 
 const set = new ORSet();
-console.log(set);
 console.log(set.add("a"));
+console.log(set.add("b"));
+console.log(set.remove("a"));
+console.log(set.query());
 
 // React.
 

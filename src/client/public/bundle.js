@@ -72,6 +72,8 @@
 	  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 	}
 
+	// Traditional add-wins observed-remove set.
+
 	var ORSet = function () {
 	  function ORSet() {
 	    _classCallCheck(this, ORSet);
@@ -83,9 +85,42 @@
 	    key: 'add',
 	    value: function add(element) {
 	      var elementPayload = this.payload.get(element, (0, _immutable.List)());
-	      var modifiedElementPayload = elementPayload.push({ id: guid(), deleted: false });
+	      var modifiedElementPayload = elementPayload.push({ id: guid(), value: element, deleted: false });
 	      this.payload = this.payload.set(element, modifiedElementPayload);
 	      return this;
+	    }
+	  }, {
+	    key: 'remove',
+	    value: function remove(element) {
+	      var elementPayload = this.payload.get(element, (0, _immutable.List)());
+	      var modifiedElementPayload = elementPayload.reduce(function (payload, item) {
+	        item["deleted"] = true;
+	        return payload.push(item);
+	      }, (0, _immutable.List)());
+	      this.payload = this.payload.set(element, modifiedElementPayload);
+	      return this;
+	    }
+	  }, {
+	    key: 'merge',
+	    value: function merge(orset) {}
+	  }, {
+	    key: 'query',
+	    value: function query() {
+	      return this.payload.reduce(function (elements, element, key) {
+	        var present = element.some(function (value) {
+	          if (value.deleted === false) {
+	            return true;
+	          } else {
+	            return false;
+	          }
+	        });
+
+	        if (present === true) {
+	          return elements.push(key);
+	        } else {
+	          return elements;
+	        }
+	      }, (0, _immutable.List)());
 	    }
 	  }]);
 
@@ -93,8 +128,10 @@
 	}();
 
 	var set = new ORSet();
-	console.log(set);
 	console.log(set.add("a"));
+	console.log(set.add("b"));
+	console.log(set.remove("a"));
+	console.log(set.query());
 
 	// React.
 
